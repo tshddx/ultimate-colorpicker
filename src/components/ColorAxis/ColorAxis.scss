@@ -1,0 +1,13 @@
+.ColorAxis {
+  margin-bottom: 16px;
+  width: 300px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &__canvas {
+    // background-color: pink;
+    // border: 1px solid grey;
+  }
+}

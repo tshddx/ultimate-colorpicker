@@ -1,0 +1,5 @@
+.ColorAxis {
+  margin-bottom: 16px;
+  width: 300px; }
+  .ColorAxis:last-child {
+    margin-bottom: 0; }

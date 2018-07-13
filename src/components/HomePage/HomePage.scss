@@ -1,0 +1,11 @@
+.HomePage {
+  // margin: 36px;
+  // width: 500px;
+  &__currentColor {
+    margin-bottom: 8px;
+  }
+
+  &__colorSpaces {
+    display: flex;
+  }
+}
