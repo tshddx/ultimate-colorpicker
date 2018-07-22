@@ -9,16 +9,16 @@ const spaces = {
     fromPositionalArgs: ([l, c, h]) => ({ l, c, h }),
     axes: {
       l: {
-        range: [0, 150],
-        name: "luminance",
+        range: [0, 100],
+        name: "Lightness",
       },
       c: {
-        range: [0, 150],
-        name: "chroma",
+        range: [0, 100],
+        name: "Chroma",
       },
       h: {
         range: [0, 360],
-        name: "hue",
+        name: "Hue",
       },
     },
     validator: chromaColor => {
@@ -31,6 +31,25 @@ const spaces = {
       // }
     },
   },
+  lab: {
+    name: "Lab",
+    toPositionalArgs: ({ l, a, b }) => [l, a, b],
+    fromPositionalArgs: ([l, a, b]) => ({ l, a, b }),
+    axes: {
+      l: {
+        range: [0, 100],
+        name: "Lightness",
+      },
+      a: {
+        range: [0, 100],
+        name: "A (green <> red)",
+      },
+      b: {
+        range: [0, 100],
+        name: "B (blue <> yellow)",
+      },
+    },
+  },
   rgb: {
     name: "RGB",
     toPositionalArgs: ({ r, g, b }) => [r, g, b],
@@ -38,15 +57,15 @@ const spaces = {
     axes: {
       r: {
         range: [0, 255],
-        name: "red",
+        name: "Red",
       },
       g: {
         range: [0, 255],
-        name: "green",
+        name: "Green",
       },
       b: {
         range: [0, 255],
-        name: "blue",
+        name: "Blue",
       },
     },
     chromaConstructor: chroma,
@@ -59,15 +78,38 @@ const spaces = {
     axes: {
       h: {
         range: [0, 360],
-        name: "hue",
+        name: "Hue",
       },
       s: {
         range: [0, 1],
-        name: "saturation",
+        name: "Saturation",
       },
       l: {
         range: [0, 1],
-        name: "lightness",
+        name: "Lightness",
+      },
+    },
+  },
+  cmyk: {
+    name: "CMYK",
+    toPositionalArgs: ({ c, m, y, k }) => [c, m, y, k],
+    fromPositionalArgs: ([c, m, y, k]) => ({ c, m, y, k }),
+    axes: {
+      c: {
+        range: [0, 1],
+        name: "Cyan",
+      },
+      m: {
+        range: [0, 1],
+        name: "Magenta",
+      },
+      y: {
+        range: [0, 1],
+        name: "Yellow",
+      },
+      k: {
+        range: [0, 1],
+        name: "Black (K)",
       },
     },
   },

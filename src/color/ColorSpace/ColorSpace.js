@@ -203,6 +203,8 @@ export const makeColorSpace = (key, space) => {
       };
     };
 
+    const graphWithMemoized = memoize(graphWith, (...args) => args);
+
     return {
       ...axis,
       // TODO: this seems to not work, and the annotate loop in Color.js is
@@ -217,7 +219,7 @@ export const makeColorSpace = (key, space) => {
       steps,
       round,
       scale,
-      graphWith,
+      graphWith: graphWithMemoized,
     };
   });
 

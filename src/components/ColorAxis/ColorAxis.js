@@ -31,7 +31,7 @@ const ColorAxis = ({ color, setColor, axis, space }) => {
     round,
     range: [min, max],
     orderOfMagnitude,
-    precision
+    precision,
   } = axis;
 
   const args = space.args(color);
@@ -69,7 +69,7 @@ const ColorAxis = ({ color, setColor, axis, space }) => {
             color={color}
             axis={axis}
             space={space}
-            resolution={steps}
+            resolution={steps / 4}
           />
         </div>
         {/* <div className={classnames(bem("debug"))}>{JSON.stringify(args)}</div> */}
@@ -108,7 +108,7 @@ ColorAxis.propTypes = {
   color: PropTypes.any.isRequired,
   setColor: PropTypes.func.isRequired,
   axis: PropTypes.object.isRequired,
-  space: PropTypes.object.isRequired
+  space: PropTypes.object.isRequired,
 };
 
 ColorAxis.defaultProps = {};
