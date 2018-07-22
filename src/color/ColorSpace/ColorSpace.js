@@ -5,11 +5,34 @@ import noop from "lodash/noop";
 import lodashRound from "lodash/round";
 import mapInterval from "../../utils/mapInterval";
 import memoize from "lodash/memoize";
+import size from "lodash/size";
 
 const USE_CACHE = true;
 const COLOR_CACHE = {};
 const SCALE_CACHE = {};
 
+const makeCache = (getKey, makeObj) => {
+  const store = {};
+  const stats = { hits: 0, misses: 0 };
+
+  const cacheObj = {
+    store,
+    stats,
+    get(...id) {
+      const key = getKey(...id);
+      if (store[key]) {
+        stats.hits += 1;
+        return store[key];
+      } else {
+        stats.misses += 1;
+        const obj = makeObj(...id);
+        store[key] = obj;
+        return obj;
+      }
+    },
+  };
+  return cacheObj;
+};
 export const makeColorSpace = (key, space) => {
   const {
     axes,
