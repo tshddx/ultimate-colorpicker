@@ -8,6 +8,8 @@ import memoize from "lodash/memoize";
 import size from "lodash/size";
 import debounce from "lodash/debounce";
 
+window.chroma = chroma;
+
 const USE_CACHE = false;
 
 const makeCache = (getKey, makeObj, name, debug) => {
@@ -31,9 +33,9 @@ const makeCache = (getKey, makeObj, name, debug) => {
       // });
       console.log({
         name,
+        recentHitPercent,
         cacheSize: size(store),
         ...recentStats,
-        recentHitPercent,
       });
       recentStats = { hits: 0, misses: 0, missedKeys: new Set() };
     },
@@ -70,7 +72,7 @@ const COLOR_CACHE = makeCache(
   (space, args) => [space.key, ...space.toPositionalArgs(args)].join(","),
   (space, args) => space._make(args),
   "COLOR_CACHE",
-  true
+  false
 );
 
 window.COLOR_CACHE = COLOR_CACHE;
@@ -88,6 +90,16 @@ const SCALE_CACHE = makeCache(
 );
 
 window.SCALE_CACHE = SCALE_CACHE;
+
+const ARGS_CACHE = makeCache(
+  (space, color) => {
+    const rgb = color.chromaColor._rgb.slice(0, 3);
+    return [space.key, ...rgb].join(",");
+  },
+  (space, color) => space._args(color),
+  "ARGS_CACHE",
+  true
+);
 
 export const makeColorSpace = (key, space) => {
   const {
@@ -132,7 +144,7 @@ export const makeColorSpace = (key, space) => {
 
       return color;
     },
-    args(color) {
+    _args(color) {
       if (color.space === this) {
         return color.args;
       } else {
@@ -140,6 +152,10 @@ export const makeColorSpace = (key, space) => {
         const args = this.fromPositionalArgs(positionalArgs);
         return this.roundArgs(args);
       }
+    },
+    args(color) {
+      return ARGS_CACHE.get(this, color);
+      // return this._args(color);
     },
     roundArgs(args) {
       return mapValues(args, (val, key) => {

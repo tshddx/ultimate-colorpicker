@@ -6,39 +6,18 @@ import "./ColorAxis.css";
 import { ColorAxisCanvasStateful } from "../ColorAxisCanvas/ColorAxisCanvas";
 import { isObject } from "util";
 
-// 1  2
-// 10  1
-// 100  0
-
 const bem = makeBem("ColorAxis");
 
-const ColorAxis2 = props => {
-  if (!isObject(props)) {
-    console.log("badprops", props);
-  }
-  return (
-    <small>
-      <pre>{"PROPS: " + JSON.stringify(props, null, 2)}</pre>
-    </small>
-  );
-};
-
-const ColorAxis = ({ color, setColor, axis, space }) => {
-  const {
-    size,
-    step,
-    steps,
-    round,
-    range: [min, max],
-    orderOfMagnitude,
-    precision,
-  } = axis;
+const ColorAxis = ({ color, setColor, axis }) => {
+  const { space, step, steps, round, min, max } = axis;
 
   const args = space.args(color);
   const realValue = args[axis.key];
-  const nominalValue = color.space === space ? color.args[axis.key] : realValue;
-  const difference = Math.abs(nominalValue - realValue);
-  const percentDifference = (difference / size) * 100;
+  // const nominalValue = color.space === space ? color.args[axis.key] : realValue;
+  const nominalValue = realValue;
+  // const difference = Math.abs(nominalValue - realValue);
+  // const percentDifference = (difference / size) * 100;
+  const percentDifference = 0;
   return (
     <div className={classnames(bem())}>
       <div className={classnames(bem("name"))}>{axis.name}</div>
@@ -55,11 +34,6 @@ const ColorAxis = ({ color, setColor, axis, space }) => {
               const value = parseFloat(event.target.value);
               const newArgs = { [axis.key]: value };
               const newColor = space.replace(color, newArgs);
-              // console.log("axis key:", axis.key);
-              // console.log("value:", JSON.stringify(value));
-              // console.log("oldColor:", space.args(color));
-              // console.log("newArgs:", newArgs);
-              // console.log("newColor:", space.args(newColor));
               setColor(newColor);
             }}
           />
@@ -72,29 +46,11 @@ const ColorAxis = ({ color, setColor, axis, space }) => {
             resolution={steps / 4}
           />
         </div>
-        {/* <div className={classnames(bem("debug"))}>{JSON.stringify(args)}</div> */}
-        {/* <div className={classnames(bem("debug"))}>
-          <pre>
-            <small>
-              {JSON.stringify(
-                {
-                  size,
-                  step,
-                  steps,
-                  orderOfMagnitude,
-                  precision
-                },
-                null,
-                2
-              )}
-            </small>
-          </pre>
-        </div> */}
       </div>
       <div className={classnames(bem("value"))}>
         {percentDifference > 1 ? (
           <span className={classnames(bem("valueDifference"))}>
-            {round(nominalValue, 3)} != {round(realValue, 3)}
+            {/* {round(nominalValue, 3)} != {round(realValue, 3)} */}
           </span>
         ) : (
           <span>{round(nominalValue)}</span>
@@ -108,7 +64,6 @@ ColorAxis.propTypes = {
   color: PropTypes.any.isRequired,
   setColor: PropTypes.func.isRequired,
   axis: PropTypes.object.isRequired,
-  space: PropTypes.object.isRequired,
 };
 
 ColorAxis.defaultProps = {};

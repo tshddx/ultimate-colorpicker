@@ -11,13 +11,7 @@ const bem = makeBem("ColorSpace");
 const ColorSpace = ({ color, setColor, space }) => {
   const colorAxes = map(space.axes, (axis, key) => {
     return (
-      <ColorAxis
-        key={key}
-        color={color}
-        setColor={setColor}
-        space={space}
-        axis={axis}
-      />
+      <ColorAxis key={key} color={color} setColor={setColor} axis={axis} />
     );
   });
   return (
@@ -34,7 +28,7 @@ const ColorSpace = ({ color, setColor, space }) => {
 ColorSpace.propTypes = {
   color: PropTypes.any.isRequired,
   setColor: PropTypes.func.isRequired,
-  space: PropTypes.object.isRequired
+  space: PropTypes.object.isRequired,
 };
 
 ColorSpace.defaultProps = {};
