@@ -28,7 +28,7 @@ const HomePage = ({ color, setColor }) => {
             style={{
               width: "80px",
               height: "80px",
-              backgroundColor: hex
+              backgroundColor: hex,
             }}
           />
         </div>
@@ -43,11 +43,11 @@ const HomePage = ({ color, setColor }) => {
 
 HomePage.propTypes = {
   color: PropTypes.any.isRequired,
-  setColor: PropTypes.func.isRequired
+  setColor: PropTypes.func.isRequired,
 };
 
 HomePage.defaultProps = {
-  space: Color.lch
+  space: Color.lch,
 };
 
 export default HomePage;

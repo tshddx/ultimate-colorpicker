@@ -6,23 +6,57 @@ import lodashRound from "lodash/round";
 import mapInterval from "../../utils/mapInterval";
 import memoize from "lodash/memoize";
 import size from "lodash/size";
+import debounce from "lodash/debounce";
 
 const USE_CACHE = false;
 
-const makeCache = (getKey, makeObj) => {
+const makeCache = (getKey, makeObj, name, debug) => {
   const store = {};
   const stats = { hits: 0, misses: 0 };
+  let recentStats = { hits: 0, misses: 0, missedKeys: new Set() };
+
+  const log = debounce(
+    () => {
+      const total = stats.hits + stats.misses;
+      const hitPercent = lodashRound((100 * stats.hits) / total, 1);
+      const recentTotal = recentStats.hits + recentStats.misses;
+      const recentHitPercent =
+        recentTotal == 0
+          ? 0
+          : lodashRound((100 * recentStats.hits) / recentTotal, 1);
+      // console.log({
+      //   name,
+      //   ...stats,
+      //   hitPercent,
+      // });
+      console.log({
+        name,
+        cacheSize: size(store),
+        ...recentStats,
+        recentHitPercent,
+      });
+      recentStats = { hits: 0, misses: 0, missedKeys: new Set() };
+    },
+    1000,
+    { leading: false }
+  );
 
   const cacheObj = {
     store,
     stats,
     get(...id) {
+      if (debug) {
+        log();
+      }
       const key = getKey(...id);
       if (store[key]) {
         stats.hits += 1;
+        recentStats.hits += 1;
         return store[key];
       } else {
         stats.misses += 1;
+        recentStats.misses += 1;
+        recentStats.missedKeys.add(key);
         const obj = makeObj(...id);
         store[key] = obj;
         return obj;
@@ -33,9 +67,13 @@ const makeCache = (getKey, makeObj) => {
 };
 
 const COLOR_CACHE = makeCache(
-  (space, args) => [space.key, ...Object.values(args)].join(","),
-  (space, args) => space._make(args)
+  (space, args) => [space.key, ...space.toPositionalArgs(args)].join(","),
+  (space, args) => space._make(args),
+  "COLOR_CACHE",
+  true
 );
+
+window.COLOR_CACHE = COLOR_CACHE;
 
 const SCALE_CACHE = makeCache(
   (axis, color, resolution) => {
@@ -45,8 +83,11 @@ const SCALE_CACHE = makeCache(
       ","
     );
   },
-  (axis, color, resolution) => axis._scale(color, resolution)
+  (axis, color, resolution) => axis._scale(color, resolution),
+  "SCALE_CACHE"
 );
+
+window.SCALE_CACHE = SCALE_CACHE;
 
 export const makeColorSpace = (key, space) => {
   const {
@@ -57,14 +98,15 @@ export const makeColorSpace = (key, space) => {
 
   const spaceObj = {
     ...space,
+    key,
     validator,
     chromaConstructor,
     chromaConverter,
     make(args) {
-      return COLOR_CACHE.get(this, args);
+      return COLOR_CACHE.get(this, this.roundArgs(args));
     },
     _make(args) {
-      const positionalArgs = this.toPositionalArgs(this.roundArgs(args));
+      const positionalArgs = this.toPositionalArgs(args);
       const chromaColor = this.chromaConstructor(...positionalArgs);
       const that = this;
 
@@ -101,15 +143,7 @@ export const makeColorSpace = (key, space) => {
     },
     roundArgs(args) {
       return mapValues(args, (val, key) => {
-        const axis = this.axes[key];
-        if (axis) {
-          return axis.round(val);
-        } else {
-          console.log("no axis", Object.keys(this.axes), key);
-          throw new Error(
-            "no axis " + JSON.stringify(Object.keys(this.axes)) + " " + key
-          );
-        }
+        return this.axes[key].round(val);
       });
     },
     mult(color, multArgs) {
