@@ -13,11 +13,18 @@ import { ColorGraphStateful } from "../ColorGraph/ColorGraph";
 
 const bem = makeBem("HomePage");
 
-const HomePage = ({ color, setColor }) => {
+const HomePage = ({ color, setColor, settings }) => {
   const hex = color.chromaColor.hex();
   const invalid = !color.isValid();
   const colorSpaces = map(Color, space => {
-    return <ColorSpace color={color} setColor={setColor} space={space} />;
+    return (
+      <ColorSpace
+        color={color}
+        setColor={setColor}
+        space={space}
+        settings={settings}
+      />
+    );
   });
   return (
     <div className={classnames(bem())}>
@@ -35,7 +42,7 @@ const HomePage = ({ color, setColor }) => {
         {colorSpaces}
       </div>
       <div className={classnames(bem("graph"))}>
-        <ColorGraphStateful color={color} />
+        <ColorGraphStateful color={color} settings={settings} />
       </div>
     </div>
   );

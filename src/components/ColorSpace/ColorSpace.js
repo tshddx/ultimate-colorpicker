@@ -8,10 +8,16 @@ import ColorAxis from "../ColorAxis";
 
 const bem = makeBem("ColorSpace");
 
-const ColorSpace = ({ color, setColor, space }) => {
+const ColorSpace = ({ color, setColor, space, settings }) => {
   const colorAxes = map(space.axes, (axis, key) => {
     return (
-      <ColorAxis key={key} color={color} setColor={setColor} axis={axis} />
+      <ColorAxis
+        key={key}
+        color={color}
+        setColor={setColor}
+        axis={axis}
+        settings={settings}
+      />
     );
   });
   return (

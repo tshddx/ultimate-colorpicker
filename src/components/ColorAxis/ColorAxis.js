@@ -8,7 +8,7 @@ import { isObject } from "util";
 
 const bem = makeBem("ColorAxis");
 
-const ColorAxis = ({ color, setColor, axis }) => {
+const ColorAxis = ({ color, setColor, axis, settings }) => {
   const { space, step, steps, round, min, max } = axis;
 
   const args = space.args(color);
@@ -44,6 +44,7 @@ const ColorAxis = ({ color, setColor, axis }) => {
             axis={axis}
             space={space}
             resolution={steps / 4}
+            settings={settings}
           />
         </div>
       </div>

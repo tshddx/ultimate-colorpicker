@@ -14,6 +14,7 @@ import {
   shouldUpdate,
   shallowEqual,
 } from "recompose";
+import { observer } from "mobx-react";
 
 const bem = makeBem("ColorGraphCanvas");
 
@@ -21,16 +22,21 @@ const ColorGraphCanvas = ({
   color,
   xAxis,
   yAxis,
-  downsample,
-  fullRes,
+  // downsample,
+  // fullRes,
   canvas,
   canvasRef,
   width,
   height,
+  settings,
 }) => {
   if (canvas) {
-    const rowCount = fullRes ? width : yAxis.steps * downsample;
-    const colCount = fullRes ? height : xAxis.steps * downsample;
+    const rowCount = settings.fullRes
+      ? width
+      : yAxis.steps * settings.downsample;
+    const colCount = settings.fullRes
+      ? height
+      : xAxis.steps * settings.downsample;
     const rowHeight = height / rowCount;
     const colWidth = width / colCount;
 
@@ -142,5 +148,6 @@ export const ColorGraphCanvasStateful = compose(
         setCanvas(getCanvas());
       }
     },
-  })
+  }),
+  observer
 )(ColorGraphCanvas);
