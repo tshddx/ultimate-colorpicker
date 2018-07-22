@@ -1,11 +1,6 @@
 .ColorSpace {
-  padding: 8px;
-  width: 300px;
-  border: 2px solid silver;
-  margin-right: 8px; }
-  .ColorSpace:last-child {
-    margin-right: 0; }
-  .ColorSpace__title {
+  padding: 8px; }
+  .ColorSpace__name {
     font-size: 115%;
     font-weight: bold;
     margin-bottom: 8px; }

@@ -2,6 +2,7 @@ import Color from "./Color";
 import times from "lodash/times";
 import chroma from "chroma-js";
 import isNan from "lodash/isNaN";
+import mapInterval from "../utils/mapInterval";
 
 describe("Color", () => {
   describe("renders correctly", () => {
@@ -56,13 +57,67 @@ describe("Color", () => {
 
     times(5, i => {
       const c = 0.00001 * i;
-      fit(`chroma=${c} is invalid in chroma-js`, () => {
+      it(`chroma=${c} is invalid in chroma-js`, () => {
         const input = [50, c, 130];
         const color = chroma.lch(...input);
-        const output = color.lch();
+        const output = color.lch().map(Math.round);
         expect(color.clipped()).toBeTruthy();
         // expect(output.some(isNan)).toBeTruthy();
       });
+    });
+
+    let n;
+
+    n = 10;
+
+    times(n, i => {
+      const v = Math.round(mapInterval(i, 0, n - 1, 0, 100));
+      it(`${v}`, () => {
+        const input = [v, v, v];
+        const color = chroma.lch(...input);
+        const output = color.lch().map(Math.round);
+        expect(output).toEqual(input);
+        // expect(output.some(isNan)).toBeTruthy();
+      });
+    });
+
+    n = 100;
+
+    it.only(`scales should be equal`, () => {
+      const scales = times(n, i => {
+        const h = mapInterval(i, 0, n, 0, 360);
+        const color = Color.lch.make({ l: 53, c: 30, h });
+        const scale = Color.lch.axes.h.scale(color, n);
+        return {
+          hex: scale.map(c => c.chromaColor.hex()),
+          clipped: scale.map(c => c.chromaColor.clipped())
+        };
+      });
+      expect(scales.length).toEqual(n);
+      const firstScale = scales[0];
+      // expect(firstScale).toEqual([]);
+      scales.forEach(scale => {
+        expect(scale).toEqual(firstScale);
+      });
+    });
+  });
+  describe("rgb", () => {
+    it("stuff", () => {
+      const rgb = Color.rgb;
+      const color = rgb.make({ r: 50, g: 50, b: 50 });
+      const args = rgb.args(color);
+      const color2 = rgb.make(args);
+      const args2 = rgb.args(color2);
+      expect(args).toEqual(args2);
+    });
+    it("replace", () => {
+      const rgb = Color.rgb;
+      const input = { r: 50, g: 50, b: 50 };
+      const color = rgb.make(input);
+      const newArgs = { b: 100 };
+      const color2 = rgb.replace(color, newArgs);
+      const args = rgb.args(color2);
+      expect(args).toEqual({ ...input, ...newArgs });
     });
   });
 });

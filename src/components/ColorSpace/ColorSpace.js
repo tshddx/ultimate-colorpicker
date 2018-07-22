@@ -22,7 +22,10 @@ const ColorSpace = ({ color, setColor, space }) => {
   });
   return (
     <div className={classnames(bem())}>
-      <div className={classnames(bem("title"))}>{space.name}</div>
+      <div className={classnames(bem("name"))}>{space.name}</div>
+      {/* <div className={classnames(bem("name"))}>
+        {JSON.stringify(space.args(color))}
+      </div> */}
       {colorAxes}
     </div>
   );

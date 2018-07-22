@@ -1,11 +1,16 @@
 .HomePage {
   // margin: 36px;
   // width: 500px;
+
+  display: flex;
+
   &__currentColor {
     margin-bottom: 8px;
+    margin-right: 16px;
   }
 
   &__colorSpaces {
-    display: flex;
+    width: 500px;
+    // display: flex;
   }
 }

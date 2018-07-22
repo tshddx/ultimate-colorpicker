@@ -9,6 +9,7 @@ import { compose, withState } from "recompose";
 import map from "lodash/map";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
+import { ColorGraphStateful } from "../ColorGraph/ColorGraph";
 
 const bem = makeBem("HomePage");
 
@@ -20,18 +21,22 @@ const HomePage = ({ color, setColor }) => {
   });
   return (
     <div className={classnames(bem())}>
-      <div className={classnames(bem("currentColor"))}>
-        Color: {hex}
-        {invalid && <span>invalid!</span>}
-        <div
-          style={{
-            width: "100px",
-            height: "100px",
-            backgroundColor: hex
-          }}
-        />
+      <div className={classnames(bem("colorSpaces"))}>
+        <div className={classnames(bem("currentColor"))}>
+          {hex}
+          <div
+            style={{
+              width: "80px",
+              height: "80px",
+              backgroundColor: hex
+            }}
+          />
+        </div>
+        {colorSpaces}
       </div>
-      <div className={classnames(bem("colorSpaces"))}>{colorSpaces}</div>
+      <div className={classnames(bem("graph"))}>
+        <ColorGraphStateful color={color} />
+      </div>
     </div>
   );
 };
@@ -47,8 +52,8 @@ HomePage.defaultProps = {
 
 export default HomePage;
 
-// const COLOR = Color.lch.make({ l: 50, c: 40, h: 130 });
-const COLOR = Color.rgb.make({ r: 250, g: 40, b: 130 });
+// const COLOR = Color.rgb.make({ r: 250, g: 40, b: 130 });
+const COLOR = Color.lch.make({ l: 52, c: 30, h: 180 });
 
 export const HomePageStateful = compose(withState("color", "setColor", COLOR))(
   HomePage

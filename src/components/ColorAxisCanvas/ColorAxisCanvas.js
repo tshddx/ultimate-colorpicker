@@ -17,8 +17,12 @@ import {
 
 const bem = makeBem("ColorAxisCanvas");
 
+const INVALID_BAR_HEIGHT = 4;
+const INVALID_BAR_GAP = 1;
+
 const ColorAxisCanvas = ({
   color,
+  space,
   axis,
   resolution,
   canvas,
@@ -31,13 +35,30 @@ const ColorAxisCanvas = ({
     const lineWidth = width / resolution;
     const colors = axis.scale(color, resolution);
     colors.forEach((color_, index) => {
+      // var grd = ctx.createLinearGradient(0, 0, 200, 0);
+      // grd.addColorStop(0, "red");
+      // grd.addColorStop(1, "white");
+
+      // // Fill with gradient
+      // ctx.fillStyle = grd;
+
       ctx.fillStyle = color_.chromaColor.hex();
-      ctx.fillRect(index * lineWidth, 6, lineWidth, height);
+      ctx.fillRect(index * lineWidth, INVALID_BAR_HEIGHT, lineWidth, height);
       if (color_.isValid()) {
-        ctx.clearRect(index * lineWidth, 0, lineWidth, 5);
+        ctx.clearRect(
+          index * lineWidth,
+          0,
+          lineWidth,
+          INVALID_BAR_HEIGHT - INVALID_BAR_GAP
+        );
       } else {
         ctx.fillStyle = "red";
-        ctx.fillRect(index * lineWidth, 0, lineWidth, 5);
+        ctx.fillRect(
+          index * lineWidth,
+          0,
+          lineWidth,
+          INVALID_BAR_HEIGHT - INVALID_BAR_GAP
+        );
       }
     });
   }
@@ -49,6 +70,7 @@ const ColorAxisCanvas = ({
 
 ColorAxisCanvas.propTypes = {
   color: PropTypes.any.isRequired,
+  space: PropTypes.object.isRequired,
   axis: PropTypes.object.isRequired,
   resolution: PropTypes.number.isRequired,
   width: PropTypes.number.isRequired,
@@ -58,26 +80,26 @@ ColorAxisCanvas.propTypes = {
 };
 
 ColorAxisCanvas.defaultProps = {
-  resolution: 300,
+  resolution: 50,
   width: 300,
-  height: 40
+  height: 20
 };
 
 export default ColorAxisCanvas;
 
 export const ColorAxisCanvasStateful = compose(
-  shouldUpdate(({ color: prevColor }, { color: nextColor, axis }) => {
-    const value = nextColor.args[axis.key];
-    const newArgs = { [axis.key]: value };
-    const prevNormalized = prevColor.space.replace(prevColor, newArgs);
-    const nextNormalized = nextColor.space.replace(nextColor, newArgs);
-    if (shallowEqual(prevNormalized.args, nextNormalized.args)) {
-      console.log(axis.key);
-      return false;
-    } else {
-      return true;
-    }
-  }),
+  // shouldUpdate(({ color: prevColor }, { color: nextColor, space, axis }) => {
+  //   const value = nextColor.args[axis.key];
+  //   const newArgs = { [axis.key]: value };
+  //   const prevNormalized = space.replace(prevColor, newArgs);
+  //   const nextNormalized = space.replace(nextColor, newArgs);
+  //   if (shallowEqual(prevNormalized.args, nextNormalized.args)) {
+  //     console.log("shallow equal", axis.key);
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // }),
   withState("canvas", "setCanvas", null),
   withHandlers(() => {
     // This uses the recompose withHandlers closure to

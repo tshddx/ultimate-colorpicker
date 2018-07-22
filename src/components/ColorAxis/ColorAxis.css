@@ -1,5 +1,10 @@
 .ColorAxis {
   margin-bottom: 16px;
-  width: 300px; }
+  display: flex;
+  align-items: center; }
   .ColorAxis:last-child {
     margin-bottom: 0; }
+  .ColorAxis__name {
+    flex: 0 0 100px; }
+  .ColorAxis__value {
+    margin-left: 16px; }

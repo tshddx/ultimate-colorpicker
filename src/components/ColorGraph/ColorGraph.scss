@@ -1,0 +1,29 @@
+@import "../../Constants.scss";
+
+.ColorGraph {
+  &__canvas {
+    // $color-a: #fafafa;
+    $color-a: #fbfbfa;
+    $color-b: #eff1f2;
+    $size: 30px;
+    $size-half: $size / 2;
+
+    border: 4px solid $color-b;
+    // background-image: linear-gradient(45deg, #808080 25%, transparent 25%),
+    //   linear-gradient(-45deg, #808080 25%, transparent 25%),
+    //   linear-gradient(45deg, transparent 75%, #808080 75%),
+    //   linear-gradient(-45deg, transparent 75%, #808080 75%);
+
+    background-color: $color-b;
+    background-image: linear-gradient(45deg, $color-a 25%, transparent 25%),
+      linear-gradient(-45deg, $color-a 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, $color-a 75%),
+      linear-gradient(-45deg, transparent 75%, $color-a 75%);
+    background-size: $size $size;
+    background-position: 0 0, 0 $size-half, $size-half ($size-half * -1),
+      ($size-half * -1) 0px;
+
+    &--modifier {
+    }
+  }
+}

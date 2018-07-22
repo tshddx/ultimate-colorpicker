@@ -1,5 +1,7 @@
-.HomePage__currentColor {
-  margin-bottom: 8px; }
-
-.HomePage__colorSpaces {
+.HomePage {
   display: flex; }
+  .HomePage__currentColor {
+    margin-bottom: 8px;
+    margin-right: 16px; }
+  .HomePage__colorSpaces {
+    width: 500px; }
