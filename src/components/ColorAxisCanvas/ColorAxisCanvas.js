@@ -12,28 +12,33 @@ import {
   withState,
   lifecycle,
   shouldUpdate,
-  shallowEqual
+  shallowEqual,
 } from "recompose";
+import intDiv from "../../utils/intDiv";
 
 const bem = makeBem("ColorAxisCanvas");
 
 const INVALID_BAR_HEIGHT = 4;
-const INVALID_BAR_GAP = 1;
+const INVALID_BAR_GAP = 2;
 
 const ColorAxisCanvas = ({
   color,
-  space,
   axis,
   resolution,
   canvas,
   canvasRef,
   width,
-  height
+  height,
 }) => {
   if (canvas) {
     const ctx = canvas.getContext("2d");
-    const lineWidth = width / resolution;
-    const colors = axis.scale(color, resolution);
+
+    const res = Math.min(width, Math.round(resolution * axis.resolutionBoost));
+    const lineWidths = intDiv(width, res);
+    console.log("lineWidths", res, lineWidths);
+
+    const colors = axis.scale(color, res);
+    let xCoord = 0;
     colors.forEach((color_, index) => {
       // var grd = ctx.createLinearGradient(0, 0, 200, 0);
       // grd.addColorStop(0, "red");
@@ -43,23 +48,18 @@ const ColorAxisCanvas = ({
       // ctx.fillStyle = grd;
 
       ctx.fillStyle = color_.chromaColor.hex();
-      ctx.fillRect(index * lineWidth, INVALID_BAR_HEIGHT, lineWidth, height);
+      const lineWidth = lineWidths[index];
+      ctx.fillRect(xCoord, INVALID_BAR_HEIGHT, lineWidth, height);
+      const args = [xCoord, 0, lineWidth, INVALID_BAR_HEIGHT - INVALID_BAR_GAP];
+
       if (color_.isValid()) {
-        ctx.clearRect(
-          index * lineWidth,
-          0,
-          lineWidth,
-          INVALID_BAR_HEIGHT - INVALID_BAR_GAP
-        );
+        ctx.clearRect(...args);
       } else {
         ctx.fillStyle = "red";
-        ctx.fillRect(
-          index * lineWidth,
-          0,
-          lineWidth,
-          INVALID_BAR_HEIGHT - INVALID_BAR_GAP
-        );
+        ctx.fillRect(...args);
       }
+
+      xCoord += lineWidth;
     });
   }
 
@@ -70,19 +70,18 @@ const ColorAxisCanvas = ({
 
 ColorAxisCanvas.propTypes = {
   color: PropTypes.any.isRequired,
-  space: PropTypes.object.isRequired,
   axis: PropTypes.object.isRequired,
   resolution: PropTypes.number.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
   canvas: PropTypes.any,
-  canvasRef: PropTypes.func.isRequired
+  canvasRef: PropTypes.func.isRequired,
 };
 
 ColorAxisCanvas.defaultProps = {
-  resolution: 50,
+  resolution: 100,
   width: 300,
-  height: 20
+  height: 20,
 };
 
 export default ColorAxisCanvas;
@@ -111,7 +110,7 @@ export const ColorAxisCanvasStateful = compose(
       canvasRef: () => ref => {
         canvas_ = ref;
       },
-      getCanvas: () => () => canvas_
+      getCanvas: () => () => canvas_,
     };
   }),
   lifecycle({
@@ -121,6 +120,6 @@ export const ColorAxisCanvasStateful = compose(
         const { setCanvas } = this.props;
         setCanvas(getCanvas());
       }
-    }
+    },
   })
 )(ColorAxisCanvas);

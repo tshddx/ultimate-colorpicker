@@ -4,13 +4,13 @@ import chroma from "chroma-js";
 import isNan from "lodash/isNaN";
 import mapInterval from "../utils/mapInterval";
 
-describe("Color", () => {
+describe.skip("Color", () => {
   describe("renders correctly", () => {
     const lch = Color.lch;
     const baseColor = lch.make({
       l: 50,
       c: 24,
-      h: 120
+      h: 120,
     });
     const NUM = 135;
     let prevColor = lch.replace(baseColor, { l: NUM });
@@ -42,7 +42,7 @@ describe("Color", () => {
       });
     });
   });
-  describe.only("lch", () => {
+  describe("lch", () => {
     it("chroma=0 is invalid", () => {
       const lch = Color.lch;
       const color = lch.make({ l: 50, c: 0, h: 130 });
@@ -83,14 +83,14 @@ describe("Color", () => {
 
     n = 100;
 
-    it.only(`scales should be equal`, () => {
+    it(`scales should be equal`, () => {
       const scales = times(n, i => {
         const h = mapInterval(i, 0, n, 0, 360);
         const color = Color.lch.make({ l: 53, c: 30, h });
         const scale = Color.lch.axes.h.scale(color, n);
         return {
           hex: scale.map(c => c.chromaColor.hex()),
-          clipped: scale.map(c => c.chromaColor.clipped())
+          clipped: scale.map(c => c.chromaColor.clipped()),
         };
       });
       expect(scales.length).toEqual(n);

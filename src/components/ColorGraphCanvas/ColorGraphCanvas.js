@@ -4,6 +4,7 @@ import classnames from "classnames";
 import makeBem from "../../utils/makeBem";
 import "./ColorGraphCanvas.css";
 import times from "lodash/times";
+import reverse from "lodash/reverse";
 import chroma from "chroma-js";
 import Color from "../../color/Color";
 import {
@@ -31,21 +32,29 @@ const ColorGraphCanvas = ({
   settings,
 }) => {
   if (canvas) {
-    const rowCount = settings.fullRes
-      ? width
-      : yAxis.steps * settings.downsample;
-    const colCount = settings.fullRes
+    let rowCount = settings.fullRes ? width : yAxis.steps * settings.downsample;
+    let colCount = settings.fullRes
       ? height
       : xAxis.steps * settings.downsample;
-    const rowHeight = height / rowCount;
-    const colWidth = width / colCount;
 
-    const ctx = canvas.getContext("2d");
-    // ctx.imageSmoothingEnabled = true;
+    rowCount = 3;
+    colCount = 3;
+    const rowHeight = Math.round(height / rowCount);
+    const colWidth = Math.round(width / colCount);
+
+    // const ctx = canvas.getContext("2d");
+
+    var offscreenCanvas = document.createElement("canvas");
+    offscreenCanvas.width = width;
+    offscreenCanvas.height = height;
+    const ctx = offscreenCanvas.getContext("2d");
+
+    ctx.imageSmoothingEnabled = true;
 
     const graph = xAxis.graphWith(yAxis, rowCount, colCount)(color);
+    const graphReversed = [...graph].reverse();
 
-    graph.forEach((row, rowIndex) => {
+    graphReversed.forEach((row, rowIndex) => {
       row.forEach((colColor, colIndex) => {
         const isValid = colColor.isValid();
         const isOnValidityBorder =
@@ -58,31 +67,33 @@ const ColorGraphCanvas = ({
             //   .chromaColor.hex();
           } else {
             ctx.fillStyle = Color.lch
-              .mult(colColor, { l: -0.75 })
+              .mult(colColor, { l: -0.5 })
               .chromaColor.hex();
             // ctx.fillStyle = "white";
-            ctx.fillStyle = "red";
+            // ctx.fillStyle = "red";
           }
         } else {
           ctx.fillStyle = colColor.chromaColor.hex();
         }
+        const args = [
+          colIndex * colWidth,
+          rowIndex * rowHeight,
+          // 1,
+          // 1,
+          colWidth,
+          rowHeight,
+        ];
         if (isValid || isOnValidityBorder) {
-          ctx.fillRect(
-            colIndex * colWidth,
-            rowIndex * rowHeight,
-            colWidth,
-            rowHeight
-          );
+          ctx.fillRect(...args);
         } else {
-          ctx.clearRect(
-            colIndex * colWidth,
-            rowIndex * rowHeight,
-            colWidth,
-            rowHeight
-          );
+          // ctx.clearRect(...args);
         }
       });
     });
+
+    const context = canvas.getContext("2d");
+    context.clearRect(0, 0, width, height);
+    context.drawImage(offscreenCanvas, 0, 0);
   }
 
   return (
@@ -107,8 +118,8 @@ ColorGraphCanvas.defaultProps = {
   resolution: 50,
   fullRes: false,
   downsample: 0.25,
-  width: 300,
-  height: 300,
+  width: 100,
+  height: 100,
 };
 
 export default ColorGraphCanvas;

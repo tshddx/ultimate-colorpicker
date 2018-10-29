@@ -3,6 +3,27 @@ import forEach from "lodash/forEach";
 import { makeColorSpace } from "./ColorSpace/ColorSpace";
 
 const spaces = {
+  rgb: {
+    name: "RGB",
+    toPositionalArgs: ({ r, g, b }) => [r, g, b],
+    fromPositionalArgs: ([r, g, b]) => ({ r, g, b }),
+    axes: {
+      r: {
+        range: [0, 255],
+        name: "Red",
+      },
+      g: {
+        range: [0, 255],
+        name: "Green",
+      },
+      b: {
+        range: [0, 255],
+        name: "Blue",
+      },
+    },
+    chromaConstructor: chroma,
+    chromaConverter: chromaColor => chromaColor.rgb(false),
+  },
   lch: {
     name: "LCH",
     toPositionalArgs: ({ l, c, h }) => [l, c, h],
@@ -11,6 +32,7 @@ const spaces = {
       l: {
         range: [0, 100],
         name: "Lightness",
+        resolutionBoost: 3,
       },
       c: {
         range: [0, 100],
@@ -39,6 +61,7 @@ const spaces = {
       l: {
         range: [0, 100],
         name: "Lightness",
+        resolutionBoost: 3,
       },
       a: {
         range: [0, 100],
@@ -49,27 +72,6 @@ const spaces = {
         name: "B (blue <> yellow)",
       },
     },
-  },
-  rgb: {
-    name: "RGB",
-    toPositionalArgs: ({ r, g, b }) => [r, g, b],
-    fromPositionalArgs: ([r, g, b]) => ({ r, g, b }),
-    axes: {
-      r: {
-        range: [0, 255],
-        name: "Red",
-      },
-      g: {
-        range: [0, 255],
-        name: "Green",
-      },
-      b: {
-        range: [0, 255],
-        name: "Blue",
-      },
-    },
-    chromaConstructor: chroma,
-    chromaConverter: chromaColor => chromaColor.rgb(false),
   },
   hsl: {
     name: "HSL",
@@ -87,6 +89,7 @@ const spaces = {
       l: {
         range: [0, 1],
         name: "Lightness",
+        resolutionBoost: 3,
       },
     },
   },
@@ -110,6 +113,7 @@ const spaces = {
       k: {
         range: [0, 1],
         name: "Black (K)",
+        resolutionBoost: 3,
       },
     },
   },

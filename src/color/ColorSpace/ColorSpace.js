@@ -50,6 +50,9 @@ const makeCache = (getKey, makeObj, name, debug) => {
       if (debug) {
         log();
       }
+      if (!USE_CACHE) {
+        return makeObj(...id);
+      }
       const key = getKey(...id);
       if (store[key]) {
         stats.hits += 1;
@@ -221,6 +224,7 @@ export const makeColorSpace = (key, space) => {
       step,
       steps,
       round,
+      resolutionBoost: axis.resolutionBoost || 1,
       _scale(color, resolution) {
         const that = this;
         const colors = times(resolution, function(i) {

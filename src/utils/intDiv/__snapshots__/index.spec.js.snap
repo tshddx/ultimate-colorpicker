@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`intDiv intDivRaw intDivRaw(7, 7) parts should be correct 1`] = `"   -------   "`;
+
+exports[`intDiv intDivRaw intDivRaw(8, 7) parts should be correct 1`] = `"   ---_----   "`;
+
+exports[`intDiv intDivRaw intDivRaw(9, 7) parts should be correct 1`] = `"   --_---_--   "`;
+
+exports[`intDiv intDivRaw intDivRaw(10, 7) parts should be correct 1`] = `"   -_--_--_--   "`;
+
+exports[`intDiv intDivRaw intDivRaw(11, 7) parts should be correct 1`] = `"   -_--_-_--_-   "`;
+
+exports[`intDiv intDivRaw intDivRaw(12, 7) parts should be correct 1`] = `"   -_-_-_--_-_-   "`;
+
+exports[`intDiv intDivRaw intDivRaw(13, 7) parts should be correct 1`] = `"   -_-_-_-_-_-_-   "`;

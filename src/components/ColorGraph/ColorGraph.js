@@ -20,7 +20,8 @@ const ColorGraph = ({ xAxis, setXAxis, yAxis, setYAxis, color, settings }) => {
             type="checkbox"
             checked={settings.fullRes}
             onChange={e => (settings.fullRes = !settings.fullRes)}
-          />Full res {JSON.stringify(settings.fullRes)}
+          />
+          Full res {JSON.stringify(settings.fullRes)}
         </div>
         <div>
           <input
@@ -33,7 +34,8 @@ const ColorGraph = ({ xAxis, setXAxis, yAxis, setYAxis, color, settings }) => {
               const value = parseFloat(event.target.value);
               settings.downsample = value;
             }}
-          />Downsample: {settings.downsample}
+          />
+          Downsample: {settings.downsample}
         </div>
       </div>
       X, Y axis:
@@ -79,7 +81,7 @@ ColorGraph.propTypes = {
 ColorGraph.defaultProps = {};
 
 export const ColorGraphStateful = compose(
-  withState("xAxis", "setXAxis", Color.lch.axes.h),
-  withState("yAxis", "setYAxis", Color.lch.axes.c),
+  withState("xAxis", "setXAxis", Color.rgb.axes.g),
+  withState("yAxis", "setYAxis", Color.rgb.axes.b),
   observer
 )(ColorGraph);

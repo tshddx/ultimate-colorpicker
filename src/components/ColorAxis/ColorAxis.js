@@ -42,8 +42,7 @@ const ColorAxis = ({ color, setColor, axis, settings }) => {
           <ColorAxisCanvasStateful
             color={color}
             axis={axis}
-            space={space}
-            resolution={steps / 4}
+            resolution={steps / 5}
             settings={settings}
           />
         </div>

@@ -1,7 +1,7 @@
 import { decorate, observable } from "mobx";
 
 class Settings {
-  downsample = 0.25;
+  downsample = 0.3;
   fullRes = false;
 }
 decorate(Settings, {

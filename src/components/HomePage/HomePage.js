@@ -54,13 +54,14 @@ HomePage.propTypes = {
 };
 
 HomePage.defaultProps = {
-  space: Color.lch,
+  // space: Color.rgb,
 };
 
 export default HomePage;
 
 // const COLOR = Color.rgb.make({ r: 250, g: 40, b: 130 });
-const COLOR = Color.lch.make({ l: 52, c: 30, h: 180 });
+// const COLOR = Color.lch.make({ l: 52, c: 30, h: 180 });
+const COLOR = Color.rgb.make({ r: 0, g: 128, b: 128 });
 
 export const HomePageStateful = compose(withState("color", "setColor", COLOR))(
   HomePage
