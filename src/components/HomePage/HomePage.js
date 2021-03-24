@@ -7,8 +7,6 @@ import ColorSpace from "../ColorSpace";
 import Color from "../../color/Color";
 import { compose, withState } from "recompose";
 import map from "lodash/map";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import { ColorGraphStateful } from "../ColorGraph/ColorGraph";
 
 const bem = makeBem("HomePage");
@@ -16,7 +14,7 @@ const bem = makeBem("HomePage");
 const HomePage = ({ color, setColor, settings }) => {
   const hex = color.chromaColor.hex();
   const invalid = !color.isValid();
-  const colorSpaces = map(Color, space => {
+  const colorSpaces = map(Color, (space) => {
     return (
       <ColorSpace
         color={color}
